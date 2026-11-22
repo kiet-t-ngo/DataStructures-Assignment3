@@ -30,6 +30,7 @@ int GenerateHash(char* word);
 LinkedList* createNode(const char* name);
 void insertSorted(struct LinkedList** head, const char* name);
 LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount);
+void searchForNameTwice(char* searchName, LinkedList* hashTable[], int comparisonCount[2], LinkedList* linkedList);
 
 // METHOD       : GenerateHash()
 // DESCRIPTION  : Generates a non-negative hash index
@@ -119,8 +120,8 @@ void insertSorted(LinkedList** head, const char* name)
 //				: Returns a pointer to the node if found or NULL. 
 //				: Also counts the number of comparisons that were made during the search.
 // PARAMETERS   : 
-//		char* searchName		: name to search for in the linked list
-//      LinkedList **head		: Pointer to the head node of the linked list
+//		char* searchName		: name to search for in the linked list (entered by user)
+//      LinkedList* linkedList	: Pointer to the head node of the linked list to search
 //		int *comparisonCount	: Pointer storing the number of comparisons made during the search
 // RETURNS      : returns LinkedList* - pointer to the node if found or NULL.
 LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount)
@@ -148,6 +149,58 @@ LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comp
 	}
 	// reached the end of the linked list without finding the name
 	return NULL;
+}
+
+// METHOD       : searchForNameTwice()
+// DESCRIPTION  : Searches for the given name twice in both the linked list and the hash table
+//				: Returns a pointer to the node if found or NULL. 
+//				: Also counts the number of comparisons that were made during the search.
+// PARAMETERS   : 
+//		char* searchName		: the name to search (entered by user)
+//      LinkedList* hashTable[]	: Pointer to the hash table array of linked lists to search in
+//		int *comparisonCount[2]	: Array containing 2 elements: [0] for linked list comparisons, [1] for hash table comparisons
+//		LinkedList* linkedList	: Pointer to the head node of the linked list to search
+// RETURNS      : returns 0 or void because nothing
+void searchForNameTwice(char* searchName, LinkedList* hashTable[], int comparisonCount[2], LinkedList* linkedList)
+{
+	// Declare a pointer to hold the found node
+	LinkedList* foundNode;
+
+	// Search the linked list first
+	// Calls searchLinkedList() and store the result in foundNode
+	foundNode = searchLinkedList(searchName, linkedList, &comparisonCount[0]);
+
+	printf("Searching in the linked list for %s\n", searchName);
+
+	// If the node was found, print the message saying it was found in the linked list with the number of comparisons made
+	if (foundNode != NULL)
+	{
+		printf("\t%s was found in the linked list in %d comparisons\n", searchName, comparisonCount[0]);
+	}
+	// If the node was not found, print the message saying it was not found in the linked list with the number of comparisons made
+	else
+	{
+		printf("\t%s was NOT found in the linked list in %d comparisons\n", searchName, comparisonCount[0]);
+	}
+
+	// Now search the hash table
+	printf("Searching in the hash table for %s\n", searchName);
+
+	// Calls GenerateHash() to get the hash value for the searchName and stores it
+	int hash = GenerateHash(searchName);
+	// Calls searchLinkedList() and store the result in foundNode
+	foundNode = searchLinkedList(searchName, hashTable[hash], &comparisonCount[1]);
+
+	// If the node was found, print the message saying it was found in the hash table with the number of comparisons made
+	if (foundNode != NULL)
+	{
+		printf("\t%s was found in the hash table in %d comparisons\n", searchName, comparisonCount[1]);
+	}
+	// If the node was not found, print the message saying it was not found in the hash table with the number of comparisons made
+	else
+	{
+		printf("\t%s was NOT found in the hash table in %d comparisons\n", searchName, comparisonCount[1]);
+	}
 }
 
 int main(void)
