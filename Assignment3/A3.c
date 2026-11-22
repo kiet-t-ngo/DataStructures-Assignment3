@@ -32,6 +32,7 @@ LinkedList* createNode(const char* name);
 void insertSorted(struct LinkedList** head, const char* name);
 LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount);
 void searchForNameTwice(char* searchName, LinkedList* hashTable[], int comparisonCount[2], LinkedList* linkedList);
+void PrintList(LinkedList* head);
 
 // METHOD       : GenerateHash()
 // DESCRIPTION  : Generates a non-negative hash index
@@ -240,6 +241,19 @@ void searchForNameTwice(char* searchName, LinkedList* hashTable[], int compariso
 	else
 	{
 		printf("\t%s was NOT found in the hash table in %d comparisons\n", searchName, comparisonCount[1]);
+	}
+}
+
+// METHOD       : PrintList()
+// DESCRIPTION  : Goes through the list starting from the head node and prints the formatted list of names
+// RETURNS      : returns 0 or nothing because void
+void PrintList(LinkedList* head)
+{
+	LinkedList* current = head;
+	while (current != NULL)
+	{
+		printf("%s\n", current->name);
+		current = current->next;
 	}
 }
 
