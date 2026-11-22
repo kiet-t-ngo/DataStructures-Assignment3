@@ -28,6 +28,7 @@ typedef struct LinkedList
 // Function Prototypes
 int GenerateHash(char* word);
 LinkedList* createNode(const char* name);
+void insertSorted(struct LinkedList** head, const char* name);
 
 // METHOD       : GenerateHash()
 // DESCRIPTION  : Generates a non-negative hash index
@@ -47,8 +48,10 @@ int GenerateHash(char* word)
 }
 
 // METHOD       : createNode()
-// DESCRIPTION  : Allocates and initializes a new LinkedList node
-// RETURNS      : returns 0 or nothing because void
+// DESCRIPTION  : Allocates and initializes a new LinkedList node with a duplicated name string
+// PARAMETERS   : 
+// 	    const char* name  : Pointer to the null terminated character string that will be duplicated
+// RETURNS      : returns pointer to the newly allocated LinkedList node OR exits the program if memory allocation fails
 LinkedList* createNode(const char* name)
 {
     // allocating memory for node
@@ -68,6 +71,46 @@ LinkedList* createNode(const char* name)
     }
 	newNode->next = NULL; // Initialize next pointer to NULL
     return newNode;
+}
+
+// METHOD       : insertSorted()
+// DESCRIPTION  : Creates and inserts a new node into the sorted linked list containing the given name, maintaining the sorted order of the list
+// PARAMETERS   : 
+//      LinkedList **head	: Pointer to the head pointer of the linked list
+//		const char* name	: Pointer to the null terminated character string to store in the new node
+// RETURNS      : returns 0 or void because nothing
+void insertSorted(LinkedList** head, const char* name)
+{
+    LinkedList* newNode = createNode(name);
+    
+	// safe check, if allocation fails or is out of memory, display error and exit
+	if (newNode == NULL)
+	{
+		printf("No Memory!");
+		exit(EXIT_FAILURE);
+	}
+
+	// Compares new name against the current head node
+	// Checks if head is NULL, meaning the list is empty OR
+	// Checks if the new name is less than the head name, insert at the beginning
+	if (*head == NULL || strcmp(newNode->name, (*head)->name) < 0)
+	{
+		newNode->next = *head;
+		*head = newNode;
+		return;
+	}
+
+	// Set current pointer to head
+	LinkedList* current = *head;
+	// Moves current pointer to next as long as the next node is not NULL and is less than the new name
+	// Basically will traverse the list to find the correct position for the new node
+	while (current->next != NULL && strcmp(current->next->name, name) < 0)
+	{
+		current = current->next;
+	}
+	// Insert the new node in the correct position
+	newNode->next = current->next;
+	current->next = newNode;
 }
 
 int main(void)
