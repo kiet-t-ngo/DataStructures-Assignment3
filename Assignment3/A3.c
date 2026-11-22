@@ -3,7 +3,9 @@
  * PROJECT      : Data Structures - Assignment 3
  * PROGRAMMER   : Kiet Ngo
  * FIRST VERSION: 2026-11-19
- * DESCRIPTION  : 
+ * DESCRIPTION  : Reads a text file containing 2000+ names and stores them in a linked list and hash table
+				: The program then prompts the user to enter a name to search for in both the linked list and hash table
+				: Compares the efficiency of storing and searching a hash table and linked list for names
  */
 
 #pragma warning (disable:4996)
@@ -11,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 // According to assignment requirements, each name length is not more than 30 chars long
 // But don't use a fixed 30 char length for linked list node, so i am using 35 instead
