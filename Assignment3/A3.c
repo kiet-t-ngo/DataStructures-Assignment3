@@ -34,6 +34,8 @@ LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comp
 void searchForNameTwice(char* searchName, LinkedList* hashTable[], int comparisonCount[2], LinkedList* linkedList);
 void PrintList(LinkedList* head);
 void FreeList(LinkedList* head);
+void FreeHashTable(LinkedList* hashTable[]);
+
 
 // METHOD       : GenerateHash()
 // DESCRIPTION  : Generates a non-negative hash index
@@ -274,6 +276,22 @@ void FreeList(LinkedList* head)
 		// Free the dynamically allocated name string and the node itself
 		free(tempNode->name);
 		free(tempNode);
+	}
+}
+
+// METHOD       : FreeHashTable()
+// DESCRIPTION  : Free all dynamically allocated memory in the hash table
+// RETURNS      : returns 0 or nothing because void
+void FreeHashTable(LinkedList* hashTable[])
+{
+	// Loop through each bucket in the hash table and free the linked list in that bucket
+	for (int i = 0; i < HASH_SIZE; i++)
+	{
+		// If the bucket is not empty, free the linked list in that bucket
+		if (hashTable[i] != NULL)
+		{
+			FreeList(hashTable[i]);
+		}
 	}
 }
 
