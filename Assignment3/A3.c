@@ -326,6 +326,12 @@ int main(void)
 
 		// Removes new line and return characters from the input
 		searchNameBuffer[strcspn(searchNameBuffer, "\r\n")] = '\0';
+
+		// User entered an empty string, so we continue to the next iteration of the loop to prompt for input again
+		if (searchNameBuffer[0] == '\0')
+		{
+			continue;
+		}
 		
 		// Convert each character in the searchNameBuffer to lowercase so we can compare it 
 		// with the names in the linked list and hash table, which are also stored in lowercase
