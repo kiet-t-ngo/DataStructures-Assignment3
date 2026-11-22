@@ -80,7 +80,7 @@ void loadNames(const char* fileName, LinkedList** linkedList, LinkedList* hashTa
 	while (fgets(nameBuffer, sizeof(nameBuffer), fp))
 	{
 		// Remove new line character
-		nameBuffer[strcspn(nameBuffer, "\n")] = '\0';
+		nameBuffer[strcspn(nameBuffer, "\r\n")] = '\0';
 		// Calls insertSorted() to insert the name into the linked list
 		insertSorted(linkedList, nameBuffer);
 		// Calls GenerateHash() to get the hash value for the name
@@ -297,6 +297,21 @@ void FreeHashTable(LinkedList* hashTable[])
 
 int main(void)
 {
+	LinkedList* linkedList = NULL; // Initialize the head of the linked list to NULL
+	LinkedList* hashTable[HASH_SIZE] = {NULL}; // Initialize all buckets in the hash table to NULL
+	// Basically sets first element to NULL and the rest will be automatically set to NULL as well
+	// Won't need to loop through the hash table to set each bucket to NULL using a for loop
+	int listComparisonCount = 0; // Set a comparison count for the linked list to 0
+	int hashComparisonCount = 0; // Set a comparison count for the hash table to 0
+	int totalSearches = 0; // Set a total search count to 0 which would be the sum of the linked list and hash table comparisons
+	char searchName[MAX_NAME_LENGTH]; // Buffer to hold the name to search for with a max length of 35 characters
+
+	// Load names from the textfile into the linked list and hash table
+	loadNames("names.txt", &linkedList, hashTable);
+	printf("Names from textfile were successfully loaded into the linked list and hash table.\n");
+
+
+
 	// Display 3 blank lines after finishing the loop, as per assignment requirements
 	printf("\n\n\n");
 	printf("Total searches:\n");
