@@ -29,6 +29,7 @@ typedef struct LinkedList
 int GenerateHash(char* word);
 LinkedList* createNode(const char* name);
 void insertSorted(struct LinkedList** head, const char* name);
+LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount);
 
 // METHOD       : GenerateHash()
 // DESCRIPTION  : Generates a non-negative hash index
@@ -76,7 +77,7 @@ LinkedList* createNode(const char* name)
 // METHOD       : insertSorted()
 // DESCRIPTION  : Creates and inserts a new node into the sorted linked list containing the given name, maintaining the sorted order of the list
 // PARAMETERS   : 
-//      LinkedList **head	: Pointer to the head pointer of the linked list
+//      LinkedList **head	: Pointer to the head node of the linked list
 //		const char* name	: Pointer to the null terminated character string to store in the new node
 // RETURNS      : returns 0 or void because nothing
 void insertSorted(LinkedList** head, const char* name)
@@ -111,6 +112,42 @@ void insertSorted(LinkedList** head, const char* name)
 	// Insert the new node in the correct position
 	newNode->next = current->next;
 	current->next = newNode;
+}
+
+// METHOD       : searchLinkedList()
+// DESCRIPTION  : Searches the sorted linked list for a node containing the given name, 
+//				: Returns a pointer to the node if found or NULL. 
+//				: Also counts the number of comparisons that were made during the search.
+// PARAMETERS   : 
+//		char* searchName		: name to search for in the linked list
+//      LinkedList **head		: Pointer to the head node of the linked list
+//		int *comparisonCount	: Pointer storing the number of comparisons made during the search
+// RETURNS      : returns LinkedList* - pointer to the node if found or NULL.
+LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount)
+{
+	*comparisonCount = 0; // Initialize comparison count to 0
+	LinkedList* current = linkedList; // Start from the head of the linked list
+
+	// loop through the linked list until the end or if a name is found
+	while (current != NULL)
+	{
+		(*comparisonCount)++; // Increment comparison count
+
+		// if result is 0, then the names are equal/matching
+		if (strcmp(current->name, searchName) == 0)
+		{
+			return current; // Found the name, return the node
+		}
+		// if result is greater than 0, then the current name is greater than the search name so it will come after it
+		if (strcmp(current->name, searchName) > 0)
+		{
+			return NULL; // Stop searching since name not found and current name is greater
+		}
+
+		current = current->next; // Move to the next node
+	}
+	// reached the end of the linked list without finding the name
+	return NULL;
 }
 
 int main(void)
