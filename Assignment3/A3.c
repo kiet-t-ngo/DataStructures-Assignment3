@@ -304,18 +304,59 @@ int main(void)
 	int listComparisonCount = 0; // Set a comparison count for the linked list to 0
 	int hashComparisonCount = 0; // Set a comparison count for the hash table to 0
 	int totalSearches = 0; // Set a total search count to 0 which would be the sum of the linked list and hash table comparisons
-	char searchName[MAX_NAME_LENGTH]; // Buffer to hold the name to search for with a max length of 35 characters
+	char searchNameBuffer[MAX_NAME_LENGTH]; // Buffer to hold the name to search for with a max length of 35 characters
 
 	// Load names from the textfile into the linked list and hash table
 	loadNames("names.txt", &linkedList, hashTable);
 	printf("Names from textfile were successfully loaded into the linked list and hash table.\n");
 
+	while (1) // Infinite loop until user chooses to exit
+	{
+		printf("Enter a name to search (or 'exit' to quit): ");
 
+		// Read the user input for the name to search
+		// If fgets() returns NULL, that means there is an error or reaches the end of file, so we break out of the loop
+		if (fgets(searchNameBuffer, sizeof(searchNameBuffer), stdin) == NULL)
+		{
+			break;
+		}
+
+		// Removes new line and return characters from the input
+		searchNameBuffer[strcspn(searchNameBuffer, "\r\n")] = '\0';
+		
+		// Convert each character in the searchNameBuffer to lowercase so we can compare it 
+		// with the names in the linked list and hash table, which are also stored in lowercase
+		for (int i = 0; searchNameBuffer[i] != '\0'; i++) {
+			searchNameBuffer[i] = (char)tolower((unsigned char)searchNameBuffer[i]);
+		}
+
+		// Check if the user wants to exit the program, if they do, break out of the loop
+		if (strcmp(searchNameBuffer, "exit") == 0)
+		{
+			break;
+		}
+
+		// Create a array to hold the comparison counts for linked list and hash table and initialize both to 0
+		int comparisonCount[2] = {0, 0};
+		// Call the searchForNameTwice() function to search for the name in both the linked list and hash table
+		searchForNameTwice(searchNameBuffer, hashTable, comparisonCount, linkedList);
+
+		// Add the linked list comparison count to the running list total
+		listComparisonCount += comparisonCount[0];
+		// Add the hash table comparisons count	to the running hash total
+		hashComparisonCount += comparisonCount[1];
+		totalSearches++; // Increment the total search count
+	}
 
 	// Display 3 blank lines after finishing the loop, as per assignment requirements
 	printf("\n\n\n");
-	printf("Total searches:\n");
-	printf("Total number of comparisons for the linked list:\n");
-	printf("Total number of comparisons for the hash table:\n");
+	printf("Total searches: %d\n", totalSearches);
+	printf("Total number of comparisons for the linked list: %d\n", listComparisonCount);
+	printf("Total number of comparisons for the hash table: %d\n", hashComparisonCount);
+
+	// Free the dynamically allocated memory for the linked list and hash table
+	FreeList(linkedList);
+	FreeHashTable(hashTable);
+
 	return 0;
 }
