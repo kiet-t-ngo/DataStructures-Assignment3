@@ -33,6 +33,7 @@ void insertSorted(struct LinkedList** head, const char* name);
 LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount);
 void searchForNameTwice(char* searchName, LinkedList* hashTable[], int comparisonCount[2], LinkedList* linkedList);
 void PrintList(LinkedList* head);
+void FreeList(LinkedList* head);
 
 // METHOD       : GenerateHash()
 // DESCRIPTION  : Generates a non-negative hash index
@@ -254,6 +255,25 @@ void PrintList(LinkedList* head)
 	{
 		printf("%s\n", current->name);
 		current = current->next;
+	}
+}
+
+// METHOD       : FreeList()
+// DESCRIPTION  : Free all dynamically allocated memory in the list
+// RETURNS      : returns 0 or nothing because void
+void FreeList(LinkedList* head) 
+{
+	LinkedList* current = head;
+	LinkedList* tempNode;
+
+	// Loop through the list until the end of the list, freeing each node and its name string
+	while (current != NULL) 
+	{
+		tempNode = current;
+		current = current->next;
+		// Free the dynamically allocated name string and the node itself
+		free(tempNode->name);
+		free(tempNode);
 	}
 }
 
