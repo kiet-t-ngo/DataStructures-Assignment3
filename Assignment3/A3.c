@@ -27,6 +27,7 @@ typedef struct LinkedList
 
 // Function Prototypes
 int GenerateHash(char* word);
+void loadNames(const char* fileName, LinkedList** linkedList, LinkedList* hashTable[]);
 LinkedList* createNode(const char* name);
 void insertSorted(struct LinkedList** head, const char* name);
 LinkedList* searchLinkedList(char* searchName, LinkedList* linkedList, int* comparisonCount);
@@ -47,6 +48,45 @@ int GenerateHash(char* word)
         hash = (hash + asciiValue) % HASH_SIZE;
     }
     return hash;
+}
+
+// METHOD       : loadNames()
+// DESCRIPTION  : Loads names from a text file into a linked list and a hash table
+//				: Remove the new line characters
+//				: Maintain sorted order in both linked list and hash table.
+// PARAMETERS   : 
+//      const char* fileName  : Pointer to the textfile filename/filepath to read from that contains 2000+ names, one name per line
+//      LinkedList** linkedList  : Pointer to the head of the linked list
+//      LinkedList* hashTable[]  : Array of pointers to the heads of the hash table buckets
+// RETURNS      : returns 0 or void because nothing
+void loadNames(const char* fileName, LinkedList** linkedList, LinkedList* hashTable[])
+{
+	char nameBuffer[MAX_NAME_LENGTH]; // Buffer to hold names read from the textfile
+
+	// Open the file in read mode and check if it was successful
+	FILE* fp = fopen(fileName, "r");
+	// if NULL, then the file could not be opened, display error and exit
+	if (fp == NULL)
+	{
+		printf("Error: Could not open file named: %s.\n", fileName);
+		exit(EXIT_FAILURE);
+	}
+
+	// Read names from the textfile, line by line until the end of file is reached
+	while (fgets(nameBuffer, sizeof(nameBuffer), fp))
+	{
+		// Remove new line character
+		nameBuffer[strcspn(nameBuffer, "\n")] = '\0';
+		// Calls insertSorted() to insert the name into the linked list
+		insertSorted(linkedList, nameBuffer);
+		// Calls GenerateHash() to get the hash value for the name
+		int hash = GenerateHash(nameBuffer);
+		// Calls insertSorted() to insert the name into the hash table
+		insertSorted(&hashTable[hash], nameBuffer);
+	}
+
+	// Close the file after reading all the names
+	fclose(fp);
 }
 
 // METHOD       : createNode()
@@ -205,5 +245,10 @@ void searchForNameTwice(char* searchName, LinkedList* hashTable[], int compariso
 
 int main(void)
 {
+	// Display 3 blank lines after finishing the loop, as per assignment requirements
+	printf("\n\n\n");
+	printf("Total searches:\n");
+	printf("Total number of comparisons for the linked list:\n");
+	printf("Total number of comparisons for the hash table:\n");
 	return 0;
 }
